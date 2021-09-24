@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 use App\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+
+    private $productService;
+
+    function __construct(ProductService $productService )
+    {
+        $this->productService = $productService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,12 +22,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        if(isset($request->product_name))
-            $query = strtoupper($request->product_name);
-            return Product::where('name','LIKE','%'.$query.'%')
-                        ->orWhere('reference','LIKE','%'.$query.'%')->get();
-
-        return Product::all();
+        return $this->productService->index($request);    
     }
     /**
      * Store a newly created resource in storage.
