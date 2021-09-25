@@ -1,4 +1,4 @@
-# Avaliação para vaga de DEV VX CASE
+# DEV VX CASE
 
 ## Stack de Tecnologia:  
 Laravel  
