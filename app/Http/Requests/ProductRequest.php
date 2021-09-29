@@ -19,4 +19,11 @@ class ProductRequest extends FormRequest {
         return $rules;
     }
 
+    public function messages()
+    {
+        return [
+            'name.required' => 'Existe campo obrigatório a ser preenchido: Nome do Produto',
+        ];
+    }
+
 }

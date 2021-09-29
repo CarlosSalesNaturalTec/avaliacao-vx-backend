@@ -19,7 +19,7 @@ class ProductRepository
             return $this->product->where('name','LIKE','%'.$query.'%')
                 ->orWhere('reference','LIKE','%'.$query.'%')->get();
         } catch (\Throwable $th) {
-            return json_encode (['error' => true , 'message' => 'Erro ao obter dados do produto. Detalhe: ' . $th]  );
+            return ['error' => true , 'message' => 'Erro ao obter dados do produto. Detalhe: ' . $th] ;
         }   
     }
 
@@ -28,26 +28,25 @@ class ProductRepository
         try {
             return $this->product->all();
         } catch (\Throwable $th) {
-            return json_encode (['error' => true , 'message' => 'Erro ao obter listagem geral de produtos. Detalhe: ' . $th]  );
+            return ['error' => true , 'message' => 'Erro ao obter listagem geral de produtos. Detalhe: ' . $th];
         } 
     }
 
     public function store($request){
         try {
             $this->product->create($request);
-            return json_encode (['success' => true , 'message' => 'Produto cadastrado com sucesso']  );
+            return ['success' => true , 'message' => 'Produto cadastrado com sucesso'];
         } catch (\Throwable $th) {
-            return json_encode (['error' => true , 'message' => 'Erro ao cadastrar produto']  );
+            return ['error' => true , 'message' => 'Erro ao cadastrar produto'];
         }
     }
 
     public function show($id)
     {
         try {
-            $this->product->findOrFail($id);
-            return json_encode (['success' => true ]  );
+            return $this->product->findOrFail($id);
         } catch (\Throwable $th) {
-            return json_encode (['error' => true , 'message' => 'Erro ao tentar exibir produto. Detalhe:' . $th->getMessage()]  );
+            return ['error' => true , 'message' => 'Erro ao tentar exibir produto. Detalhe:' . $th->getMessage()];
         }
     }
 
@@ -56,9 +55,9 @@ class ProductRepository
             $product = $this->product->find($id);
             $request->update($request);
             $product->save();
-            return json_encode (['success' => true, 'message' => 'Produto atualizado com sucesso'] );
+            return ['success' => true, 'message' => 'Produto atualizado com sucesso'];
         } catch (\Throwable $th) {
-            return json_encode (['error' => true , 'message' => 'Erro ao tentar atualizar produto. Detalhe:' . $th->getMessage()]  );
+            return ['error' => true , 'message' => 'Erro ao tentar atualizar produto. Detalhe:' . $th->getMessage()];
         }
     }
 
@@ -67,9 +66,9 @@ class ProductRepository
         try {
             $product = $this->product->find($id);
             $product->delete();
-            return json_encode (['success' => true, 'message' => 'Produto excluido com sucesso'] );
+            return ['success' => true, 'message' => 'Produto excluido com sucesso'];
         } catch (\Throwable $th) {
-            return json_encode (['error' => true , 'message' => 'Erro ao tentar excluir produto. Detalhe:' . $th->getMessage()]  );
+            return ['error' => true , 'message' => 'Erro ao tentar excluir produto. Detalhe:' . $th->getMessage()];
         }
     }
 

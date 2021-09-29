@@ -25,6 +25,7 @@ class ProductController extends Controller
     {
         return $this->productService->index($request);    
     }
+    
     /**
      * Store a newly created resource in storage.
      *

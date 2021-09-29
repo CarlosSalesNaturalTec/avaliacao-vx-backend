@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Sale;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\SaleRequest;
+use App\Services\SaleService;
 
 class SaleController extends Controller
 {
+    private $saleService;
+
+    function __construct(SaleService $saleService )
+    {
+        $this->saleService = $saleService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,40 +22,21 @@ class SaleController extends Controller
      */
     public function index(Request $request)
     {
-        if(isset($request->per_page))
-            $per_page = $request->per_page;
-        else 
-            $per_page = 20;
-        
-        return Sale::with('products:name,delivery_days')->paginate($per_page);
+        return $this->saleService->index($request);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\SaleRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SaleRequest $request)
     {
-        $validator = Validator::make($request->all(),[
-            'purchase_at' => 'required|date|before:tomorrow',
-            'delivery_days' => 'required',
-            'amount' => 'required',
-            'products'=>'required',
-        ]);
-        
-        if ($validator->fails()) {
-          return response()->json(['errors'=>$validator->errors()], 422);
-        }
-    
-        $sale = new Sale;
-        $sale->purchase_at = Carbon::parse($request->purchase_at);
-        $sale->amount = $request->amount;
-        $sale->delivery_days = $request->delivery_days;
-        $sale->save();
-        $sale->products()->sync($request->products);
-        return Response()->json(['message'=>'Venda Concluida com sucesso!'], 201);
+        $request->validated();
+        $response = $this->saleService->store($request);
+        isset($response['error']) ? $codStatus = 400: $codStatus = 201;
+        return response()->json($response, $codStatus);
     }
 
     /**
@@ -60,25 +47,22 @@ class SaleController extends Controller
      */
     public function show($id)
     {
-        return Sale::with('products:name,delivery_days')->find($id);
+        return $this->saleService->show($id);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\SaleRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(SaleRequest $request, $id)
     {
-        $sale = Sale::find($id);
-        $sale->purchase_at = Carbon::parse($request->purchase_at);
-        $sale->save();
-
-        $sale->products()->sync($request->products);
-
-        return Response()->json('Venda Alterada com sucesso!', 200);
+        $request->validated();
+        $response = $this->saleService->update($request->request, $id);
+        isset($response['error']) ? $codStatus = 400: $codStatus = 201;
+        return response()->json($response, $codStatus);
     }
 
     /**
@@ -89,9 +73,8 @@ class SaleController extends Controller
      */
     public function destroy($id)
     {
-        $sale = Sale::find($id);
-        $sale->products()->detach();
-        $sale->delete();
-        return Response()->json('Venda Excluida com sucesso!', 200);
+        $response = $this->saleService->destroy($id);
+        isset($response['error']) ? $codStatus = 400: $codStatus = 201;
+        return response()->json($response, $codStatus);
     }
 }
