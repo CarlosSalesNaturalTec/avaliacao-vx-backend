@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\VxCaseNotification;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,8 +26,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command(
+            Notification::route('slack', env('SLACK_HOOK'))
+                ->notify(new VxCaseNotification())
+        )->everyFiveMinutes();
     }
 
     /**
