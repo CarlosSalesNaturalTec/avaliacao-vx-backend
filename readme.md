@@ -20,10 +20,8 @@ Bulma
  `php artisan serve`  
 
 
-## Respondendo a prova
+## Execução do Laravel Command:
+`$ php artisan help product:create`
 
-- Para realizar a avaliação, siga os passos acima. 
-- Após conseguir colocar o projeto para rodar, realize as tarefas disponibilizadas na aba (issues). 
-- Não é obrigatrio responder todas as atividades, quanto mais atividades você responder, melhor será avaliado.
-- Após ter respondido as issues, disponibilize o projeto no seu github contendo essas atualizações.
-- Informe-nos quais issues você realizou.
+`$ php artisan product:create "Nome do Produto" `
+
