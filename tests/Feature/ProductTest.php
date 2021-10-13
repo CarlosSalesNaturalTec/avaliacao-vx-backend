@@ -22,6 +22,6 @@ class ProductTest extends TestCase
     }
     public function testDatabase()
     {
-        $product = factory(App\Product::class)->make();
+        $product = factory(App\Models\Product::class)->make();
     }
 }
